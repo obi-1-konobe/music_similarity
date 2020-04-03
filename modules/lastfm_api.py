@@ -12,7 +12,7 @@ password_hash = pylast.md5("T4s4rt!rlastfm")
 network = pylast.LastFMNetwork(api_key=API_KEY, api_secret=API_SECRET,
                                username=username, password_hash=password_hash)
 
-tracks_df = utils.load('../data/fma_metadata/tracks.csv')
+tracks_df = utils.load('../data/pickles/fma_metadata/tracks.csv')
 small = tracks_df[tracks_df['set', 'subset'] <= 'small']
 artist_name = small['artist', 'name']
 track_title = small['track', 'title']
@@ -23,9 +23,7 @@ errors = list()
 i = 0
 for track in tqdm(tracks_zip):
     zip_artist, zip_title, zip_id = track
-    if i % 500 == 0:
-        with open(f'../data/pickles/{i}.pickle', 'wb') as handle:
-            pickle.dump(result_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
     try:
         artist = network.get_artist(zip_artist)
         track = network.get_track(artist, zip_title)
@@ -44,18 +42,23 @@ for track in tqdm(tracks_zip):
         temp_dict['similar_tracks'] = [(elem.item.artist.name, elem.item.title, elem.match) for elem in similar_track]
 
         result_dict[zip_id] = temp_dict
+    if i % 500 == 0:
+        result_dict['errors'] = errors
+        with open(f'{i}.pickle', 'wb') as f:
+            pickle.dump(result_dict, f)
+        result_dict = dict()
 
     i += 1
 
 result_dict['errors'] = errors
-with open('../data/pickles/fma_last_dict.pickle', 'wb') as handle:
-    pickle.dump(result_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
+with open('../data/pickles/last.pickle', 'wb') as handle:
+    pickle.dump(result_dict, handle)
 
 
 
 
 
-        
+
 
 
 
