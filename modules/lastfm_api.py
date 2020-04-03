@@ -12,7 +12,7 @@ password_hash = pylast.md5("T4s4rt!rlastfm")
 network = pylast.LastFMNetwork(api_key=API_KEY, api_secret=API_SECRET,
                                username=username, password_hash=password_hash)
 
-tracks_df = utils.load('../data/pickles/fma_metadata/tracks.csv')
+tracks_df = utils.load('../data/fma_metadata/tracks.csv')
 small = tracks_df[tracks_df['set', 'subset'] <= 'small']
 artist_name = small['artist', 'name']
 track_title = small['track', 'title']
@@ -44,7 +44,7 @@ for track in tqdm(tracks_zip):
         result_dict[zip_id] = temp_dict
     if i % 500 == 0:
         result_dict['errors'] = errors
-        with open(f'{i}.pickle', 'wb') as f:
+        with open(f'../data/pickles/{i}.pickle', 'wb') as f:
             pickle.dump(result_dict, f)
 
         result_dict = dict()
