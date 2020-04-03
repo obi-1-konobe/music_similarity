@@ -46,7 +46,9 @@ for track in tqdm(tracks_zip):
         result_dict['errors'] = errors
         with open(f'{i}.pickle', 'wb') as f:
             pickle.dump(result_dict, f)
+
         result_dict = dict()
+        errors = list()
 
     i += 1
 
