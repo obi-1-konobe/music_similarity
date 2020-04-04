@@ -13,8 +13,13 @@ class Extractor:
         for some_dir in dirs:
             list_dir = os.listdir(f'{path}{some_dir}/')
             for track in list_dir:
-                self.extract_features_all(f'{path}{some_dir}/', track)
-                self.extract_features_intervals(f'{path}{some_dir}/', track)
+                try:
+                    self.extract_features_all(f'{path}{some_dir}/', track)
+                    self.extract_features_intervals(f'{path}{some_dir}/', track)
+                except Exception:
+                    with open('../data/essentia_errors.txt', 'a+') as f:
+                        f.write(track + '\n')
+                    continue
 
     @staticmethod
     def extract_features_intervals(path, track_name):
@@ -29,7 +34,7 @@ class Extractor:
                 startTime=start,
                 endTime=end
             )(f'{path}{track_name}')
-            save_file = f'../data/essentia/{track_name[:-4]}_{i/4}.json'
+            save_file = f'../data/essentia/{track_name[:-4]}_{int(i/4)}.json'
             es.YamlOutput(filename=save_file, format="json")(features)
 
     @staticmethod
@@ -39,7 +44,7 @@ class Extractor:
             rhythmStats=['mean', 'stdev', 'min', 'max'],
             tonalStats=['mean', 'stdev', 'min', 'max'],
         )(f'{path}{track_name}')
-        save_file = f'../data/essentia/{track_name}.json'
+        save_file = f'../data/essentia/{track_name[:-4]}.json'
         es.YamlOutput(filename=save_file, format="json")(features)
 
 
