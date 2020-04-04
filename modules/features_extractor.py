@@ -10,9 +10,12 @@ class Extractor:
     def run(self):
         path = '../data/fma_small/'
         dirs = os.listdir(path)
+        essentia_listdir = os.listdir('../data/essentia/')
         for some_dir in dirs:
             list_dir = os.listdir(f'{path}{some_dir}/')
             for track in list_dir:
+                if (track[:-4] + '.json') in essentia_listdir:
+                    continue
                 try:
                     self.extract_features_all(f'{path}{some_dir}/', track)
                     self.extract_features_intervals(f'{path}{some_dir}/', track)
