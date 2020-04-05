@@ -9,6 +9,8 @@ class Vector:
 
     def run(self):
         audio_listdir = os.listdir('../data/fma_small/')
+        col_name = self.get_col_name()
+        i = 1
         vec_list = list()
         for some_dir in audio_listdir:
             list_dir = os.listdir(f'../data/fma_small/{some_dir}/')
@@ -23,10 +25,14 @@ class Vector:
                 vec = [track_name] + self.make_vector(json_list)
                 vec_list.append(vec)
 
-        col_name = self.get_col_name()
-        df = pd.DataFrame(vec_list, columns=col_name)
+                if len(vec_list) % 1000 == 0:
+                    df = pd.DataFrame(vec_list, columns=col_name)
+                    df.to_csv(f'../data/track_vectors_{i}.csv')
+                    vec_list = list()
+                    i += 1
 
-        df.to_csv('../data/track_vectors.csv')
+        df = pd.DataFrame(vec_list, columns=col_name)
+        df.to_csv(f'../data/track_vectors_{i}.csv')
 
     @staticmethod
     def find_json(track_name):
