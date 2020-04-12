@@ -27,12 +27,12 @@ class Vector:
 
                 if len(vec_list) % 1000 == 0:
                     df = pd.DataFrame(vec_list, columns=col_name)
-                    df.to_csv(f'../data/track_vectors_{i}.csv')
+                    df.to_csv(f'../data/csv/track_vectors_{i}.csv')
                     vec_list = list()
                     i += 1
 
         df = pd.DataFrame(vec_list, columns=col_name)
-        df.to_csv(f'../data/track_vectors_{i}.csv')
+        df.to_csv(f'../data/csv/track_vectors_{i}.csv')
 
     @staticmethod
     def find_json(track_name):
