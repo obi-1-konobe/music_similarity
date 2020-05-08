@@ -37,7 +37,7 @@ class Extractor:
                 startTime=start,
                 endTime=end
             )(f'{path}{track_name}')
-            save_file = f'../data/essentia_bow/{track_name[:-4]}_{int(i/4)}.json'
+            save_file = f'../data/essentia_bow/{track_name[:-4]}_{i}.json'
             es.YamlOutput(filename=save_file, format="json")(features)
 
     @staticmethod
