@@ -109,4 +109,29 @@ class Vector:
 
         return col_name
 
+    def vec_for_bow(self):
+        json_dir = '../data/essentia_bow/'
+        list_dir = os.listdir(json_dir)
+        all_data = list()
+        for file in list_dir:
+            name = file[:-5]
+            with open(f'{json_dir}{file}', 'r') as f:
+                data = json.load(f)
+
+            vec = [name]
+            vec += data['lowlevel']['mfcc']['mean']
+            vec += list(data['lowlevel']['spectral_centroid'].values())
+            vec += list(data['lowlevel']['spectral_kurtosis'].values())
+            vec += list(data['lowlevel']['spectral_rolloff'].values())
+            vec += list(data['lowlevel']['spectral_skewness'].values())
+            vec += list(data['lowlevel']['spectral_flux'].values())
+            vec += list(data['lowlevel']['zerocrossingrate'].values())
+
+            all_data.append(vec)
+
+        col_name = self.get_col_name()
+        df = pd.DataFrame(all_data, columns=col_name)
+        df.to_csv(f'../data/csv/track_vectors_bow.csv')
+
+
 

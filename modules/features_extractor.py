@@ -14,7 +14,7 @@ class Extractor:
         for some_dir in dirs:
             list_dir = os.listdir(f'{path}{some_dir}/')
             for track in list_dir:
-                if (track[:-4] + '.json') in essentia_listdir:
+                if (track[:-4] + '_30.json') in essentia_listdir:
                     continue
                 try:
                     # self.extract_features_all(f'{path}{some_dir}/', track)
