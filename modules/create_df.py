@@ -1,6 +1,7 @@
 import json
 import os
 import pandas as pd
+from tqdm import tqdm
 
 
 class Vector:
@@ -84,36 +85,38 @@ class Vector:
     @staticmethod
     def get_col_name():
         col_name = list()
-        col_name.append('track')
-        for i in range(1, 9):
-            for j in range(1, 14):
-                col_name.append(f'{i}_mfcc_{j}')
-            col_name += ['sc_max', 'sc_mean', 'sc_min', 'sc_std']
-            col_name += ['sk_max', 'sk_mean', 'sk_min', 'sk_std']
-            col_name += ['sr_max', 'sr_mean', 'sr_min', 'sr_std']
-            col_name += ['ss_max', 'ss_mean', 'ss_min', 'ss_std']
-            col_name += ['sf_max', 'sf_mean', 'sf_min', 'sf_std']
-            col_name += ['zcr_max', 'zcr_mean', 'zcr_min', 'zcr_std']
-        col_name.append('all_bc')
-        col_name.append('all_bpm')
-        col_name.append('all_or')
-        col_name.append('all_da')
+        col_name.append('file')
+        # for i in range(1, 9):
         for j in range(1, 14):
-            col_name.append(f'all_mfcc_{j}')
-        col_name += ['all_sc_max', 'all_sc_mean', 'all_sc_min', 'all_sc_std']
-        col_name += ['all_sk_max', 'all_sk_mean', 'all_sk_min', 'all_sk_std']
-        col_name += ['all_sr_max', 'all_sr_mean', 'all_sr_min', 'all_sr_std']
-        col_name += ['all_ss_max', 'all_ss_mean', 'all_ss_min', 'all_ss_std']
-        col_name += ['all_sf_max', 'all_sf_mean', 'all_sf_min', 'all_sf_std']
-        col_name += ['all_zcr_max', 'all_zcr_mean', 'all_zcr_min', 'all_zcr_std']
+            col_name.append(f'mfcc_{j}')
+        col_name += ['sc_max', 'sc_mean', 'sc_min', 'sc_std']
+        col_name += ['sk_max', 'sk_mean', 'sk_min', 'sk_std']
+        col_name += ['sr_max', 'sr_mean', 'sr_min', 'sr_std']
+        col_name += ['ss_max', 'ss_mean', 'ss_min', 'ss_std']
+        col_name += ['sf_max', 'sf_mean', 'sf_min', 'sf_std']
+        col_name += ['zcr_max', 'zcr_mean', 'zcr_min', 'zcr_std']
+        # col_name.append('all_bc')
+        # col_name.append('all_bpm')
+        # col_name.append('all_or')
+        # col_name.append('all_da')
+        # for j in range(1, 14):
+        #     col_name.append(f'all_mfcc_{j}')
+        # col_name += ['all_sc_max', 'all_sc_mean', 'all_sc_min', 'all_sc_std']
+        # col_name += ['all_sk_max', 'all_sk_mean', 'all_sk_min', 'all_sk_std']
+        # col_name += ['all_sr_max', 'all_sr_mean', 'all_sr_min', 'all_sr_std']
+        # col_name += ['all_ss_max', 'all_ss_mean', 'all_ss_min', 'all_ss_std']
+        # col_name += ['all_sf_max', 'all_sf_mean', 'all_sf_min', 'all_sf_std']
+        # col_name += ['all_zcr_max', 'all_zcr_mean', 'all_zcr_min', 'all_zcr_std']
 
         return col_name
 
     def vec_for_bow(self):
-        json_dir = '../data/essentia_bow/'
+        json_dir = '../data/essentia/'
         list_dir = os.listdir(json_dir)
         all_data = list()
-        for file in list_dir:
+        for file in tqdm(list_dir):
+            if '_' not in file:
+                continue
             name = file[:-5]
             with open(f'{json_dir}{file}', 'r') as f:
                 data = json.load(f)
