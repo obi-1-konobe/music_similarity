@@ -28,12 +28,12 @@ class Vector:
 
                 if len(vec_list) % 1000 == 0:
                     df = pd.DataFrame(vec_list, columns=col_name)
-                    df.to_csv(f'../data/csv/track_vectors_{i}.csv')
+                    df.to_csv(f'../data/csv/new_track_vectors_{i}.csv')
                     vec_list = list()
                     i += 1
 
         df = pd.DataFrame(vec_list, columns=col_name)
-        df.to_csv(f'../data/csv/track_vectors_{i}.csv')
+        df.to_csv(f'../data/csv/new_track_vectors_{i}.csv')
 
     @staticmethod
     def find_json(track_name):
@@ -61,24 +61,45 @@ class Vector:
             vec += data['lowlevel']['mfcc']['mean']
             vec += list(data['lowlevel']['spectral_centroid'].values())
             vec += list(data['lowlevel']['spectral_kurtosis'].values())
-            vec += list(data['lowlevel']['spectral_rolloff'].values())
             vec += list(data['lowlevel']['spectral_skewness'].values())
+            vec += list(data['lowlevel']['spectral_spread'].values())
+            vec += list(data['lowlevel']['spectral_rolloff'].values())
             vec += list(data['lowlevel']['spectral_flux'].values())
+            vec += list(data['lowlevel']['spectral_complexity'].values())
+            vec += list(data['lowlevel']['spectral_entropy'].values())
             vec += list(data['lowlevel']['zerocrossingrate'].values())
+            vec += list(data['lowlevel']['melbands_crest'].values())
+            vec += list(data['lowlevel']['melbands_flatness_db'].values())
+            vec += list(data['lowlevel']['pitch_salience'].values())
+            vec += list(data['tonal']['chords_strength'].values())
+            vec += list(data['tonal']['hpcp_crest'].values())
 
         data = json_list[8]
 
+        vec.append(data['lowlevel']['average_loudness'])
+        vec.append(data['lowlevel']['dynamic_complexity'])
         vec.append(data['rhythm']['beats_count'])
         vec.append(data['rhythm']['bpm'])
         vec.append(data['rhythm']['onset_rate'])
         vec.append(data['rhythm']['danceability'])
+        vec.append(data['tonal']['chords_changes_rate'])
+        vec.append(data['tonal']['chords_number_rate'])
+
         vec += data['lowlevel']['mfcc']['mean']
         vec += list(data['lowlevel']['spectral_centroid'].values())
         vec += list(data['lowlevel']['spectral_kurtosis'].values())
-        vec += list(data['lowlevel']['spectral_rolloff'].values())
         vec += list(data['lowlevel']['spectral_skewness'].values())
+        vec += list(data['lowlevel']['spectral_spread'].values())
+        vec += list(data['lowlevel']['spectral_rolloff'].values())
         vec += list(data['lowlevel']['spectral_flux'].values())
+        vec += list(data['lowlevel']['spectral_complexity'].values())
+        vec += list(data['lowlevel']['spectral_entropy'].values())
         vec += list(data['lowlevel']['zerocrossingrate'].values())
+        vec += list(data['lowlevel']['melbands_crest'].values())
+        vec += list(data['lowlevel']['melbands_flatness_db'].values())
+        vec += list(data['lowlevel']['pitch_salience'].values())
+        vec += list(data['tonal']['chords_strength'].values())
+        vec += list(data['tonal']['hpcp_crest'].values())
 
         return vec
 
@@ -86,27 +107,78 @@ class Vector:
     def get_col_name():
         col_name = list()
         col_name.append('file')
-        # for i in range(1, 9):
+        for i in range(1, 9):
+            for j in range(1, 14):
+                col_name.append(f'mfcc{j}_mean')
+            col_name += ['centroid.max', 'centroid.mean', 'centroid.min', 'centroid.std']
+            col_name += ['kurtosis.max', 'kurtosis.mean', 'kurtosis.min', 'kurtosis.std']
+            col_name += ['skewness.max', 'skewness.mean', 'skewness.min', 'skewness.std']
+            col_name += ['spread.max', 'spread.mean', 'spread.min', 'spread.std']
+            col_name += ['rolloff.max', 'rolloff.mean', 'rolloff.min', 'rolloff.std']
+            col_name += ['flux.max', 'flux.mean', 'flux.min', 'flux.std']
+            col_name += ['complexity.max', 'complexity.mean', 'complexity.min', 'complexity.std']
+            col_name += ['entropy.max', 'entropy.mean', 'entropy.min', 'entropy.std']
+            col_name += ['zcr_max', 'zcr_mean', 'zcr_min', 'zcr_std']
+            col_name += ['crest.max', 'crest.mean', 'crest.min', 'crest.std']
+            col_name += ['flatness.max', 'flatness.mean', 'flatness.min', 'flatness.std']
+            col_name += ['pitch_salience.max', 'pitch_salience.mean', 'pitch_salience.min', 'pitch_salience.std']
+            col_name += ['chords.max', 'chords.mean', 'chords.min', 'chords.std']
+            col_name += ['hpcp.max', 'hpcp.mean', 'hpcp.min', 'hpcp.std']
+        col_name.append('average_loudness')
+        col_name.append('dynamic_complexity')
+        col_name.append('beats_count')
+        col_name.append('bpm')
+        col_name.append('onset_rate')
+        col_name.append('danceability')
+        col_name.append('chords_changes')
+        col_name.append('chords_number')
         for j in range(1, 14):
-            col_name.append(f'mfcc_{j}')
-        col_name += ['sc_max', 'sc_mean', 'sc_min', 'sc_std']
-        col_name += ['sk_max', 'sk_mean', 'sk_min', 'sk_std']
-        col_name += ['sr_max', 'sr_mean', 'sr_min', 'sr_std']
-        col_name += ['ss_max', 'ss_mean', 'ss_min', 'ss_std']
-        col_name += ['sf_max', 'sf_mean', 'sf_min', 'sf_std']
+            col_name.append(f'mfcc{j}_mean')
+        col_name += ['centroid.max', 'centroid.mean', 'centroid.min', 'centroid.std']
+        col_name += ['kurtosis.max', 'kurtosis.mean', 'kurtosis.min', 'kurtosis.std']
+        col_name += ['skewness.max', 'skewness.mean', 'skewness.min', 'skewness.std']
+        col_name += ['spread.max', 'spread.mean', 'spread.min', 'spread.std']
+        col_name += ['rolloff.max', 'rolloff.mean', 'rolloff.min', 'rolloff.std']
+        col_name += ['flux.max', 'flux.mean', 'flux.min', 'flux.std']
+        col_name += ['complexity.max', 'complexity.mean', 'complexity.min', 'complexity.std']
+        col_name += ['entropy.max', 'entropy.mean', 'entropy.min', 'entropy.std']
         col_name += ['zcr_max', 'zcr_mean', 'zcr_min', 'zcr_std']
-        # col_name.append('all_bc')
-        # col_name.append('all_bpm')
-        # col_name.append('all_or')
-        # col_name.append('all_da')
-        # for j in range(1, 14):
-        #     col_name.append(f'all_mfcc_{j}')
-        # col_name += ['all_sc_max', 'all_sc_mean', 'all_sc_min', 'all_sc_std']
-        # col_name += ['all_sk_max', 'all_sk_mean', 'all_sk_min', 'all_sk_std']
-        # col_name += ['all_sr_max', 'all_sr_mean', 'all_sr_min', 'all_sr_std']
-        # col_name += ['all_ss_max', 'all_ss_mean', 'all_ss_min', 'all_ss_std']
-        # col_name += ['all_sf_max', 'all_sf_mean', 'all_sf_min', 'all_sf_std']
-        # col_name += ['all_zcr_max', 'all_zcr_mean', 'all_zcr_min', 'all_zcr_std']
+        col_name += ['crest.max', 'crest.mean', 'crest.min', 'crest.std']
+        col_name += ['flatness.max', 'flatness.mean', 'flatness.min', 'flatness.std']
+        col_name += ['pitch_salience.max', 'pitch_salience.mean', 'pitch_salience.min', 'pitch_salience.std']
+        col_name += ['chords.max', 'chords.mean', 'chords.min', 'chords.std']
+        col_name += ['hpcp.max', 'hpcp.mean', 'hpcp.min', 'hpcp.std']
+
+        return col_name
+
+    @staticmethod
+    def get_col_name_bow():
+        col_name = list()
+        col_name.append('file')
+        for j in range(1, 14):
+            col_name.append(f'mfcc{j}_mean')
+        col_name += ['centroid.max', 'centroid.mean', 'centroid.min', 'centroid.std']
+        col_name += ['kurtosis.max', 'kurtosis.mean', 'kurtosis.min', 'kurtosis.std']
+        col_name += ['skewness.max', 'skewness.mean', 'skewness.min', 'skewness.std']
+        col_name += ['spread.max', 'spread.mean', 'spread.min', 'spread.std']
+        col_name += ['rolloff.max', 'rolloff.mean', 'rolloff.min', 'rolloff.std']
+        col_name += ['flux.max', 'flux.mean', 'flux.min', 'flux.std']
+        col_name += ['complexity.max', 'complexity.mean', 'complexity.min', 'complexity.std']
+        col_name += ['entropy.max', 'entropy.mean', 'entropy.min', 'entropy.std']
+        col_name += ['zcr_max', 'zcr_mean', 'zcr_min', 'zcr_std']
+        col_name += ['crest.max', 'crest.mean', 'crest.min', 'crest.std']
+        col_name += ['flatness.max', 'flatness.mean', 'flatness.min', 'flatness.std']
+        col_name += ['pitch_salience.max', 'pitch_salience.mean', 'pitch_salience.min', 'pitch_salience.std']
+        col_name += ['chords.max', 'chords.mean', 'chords.min', 'chords.std']
+        col_name += ['hpcp.max', 'hpcp.mean', 'hpcp.min', 'hpcp.std']
+        col_name.append('average_loudness')
+        col_name.append('dynamic_complexity')
+        col_name.append('beats_count')
+        col_name.append('bpm')
+        col_name.append('onset_rate')
+        col_name.append('danceability')
+        col_name.append('chords_changes')
+        col_name.append('chords_number')
 
         return col_name
 
@@ -125,14 +197,31 @@ class Vector:
             vec += data['lowlevel']['mfcc']['mean']
             vec += list(data['lowlevel']['spectral_centroid'].values())
             vec += list(data['lowlevel']['spectral_kurtosis'].values())
-            vec += list(data['lowlevel']['spectral_rolloff'].values())
             vec += list(data['lowlevel']['spectral_skewness'].values())
+            vec += list(data['lowlevel']['spectral_spread'].values())
+            vec += list(data['lowlevel']['spectral_rolloff'].values())
             vec += list(data['lowlevel']['spectral_flux'].values())
+            vec += list(data['lowlevel']['spectral_complexity'].values())
+            vec += list(data['lowlevel']['spectral_entropy'].values())
             vec += list(data['lowlevel']['zerocrossingrate'].values())
+            vec += list(data['lowlevel']['melbands_crest'].values())
+            vec += list(data['lowlevel']['melbands_flatness_db'].values())
+            vec += list(data['lowlevel']['pitch_salience'].values())
+            vec += list(data['tonal']['chords_strength'].values())
+            vec += list(data['tonal']['hpcp_crest'].values())
+
+            vec.append(data['lowlevel']['average_loudness'])
+            vec.append(data['lowlevel']['dynamic_complexity'])
+            vec.append(data['rhythm']['beats_count'])
+            vec.append(data['rhythm']['bpm'])
+            vec.append(data['rhythm']['onset_rate'])
+            vec.append(data['rhythm']['danceability'])
+            vec.append(data['tonal']['chords_changes_rate'])
+            vec.append(data['tonal']['chords_number_rate'])
 
             all_data.append(vec)
 
-        col_name = self.get_col_name()
+        col_name = self.get_col_name_bow()
         df = pd.DataFrame(all_data, columns=col_name)
         df.to_csv(f'../data/csv/track_vectors_bow.csv')
 

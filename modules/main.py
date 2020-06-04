@@ -5,4 +5,5 @@ from features_extractor import Extractor
 # extr.run()
 
 vec = Vector()
+# vec.run()
 vec.vec_for_bow()
