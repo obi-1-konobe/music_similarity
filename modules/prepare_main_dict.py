@@ -1,39 +1,47 @@
 import pickle
-import os
+# import os
 import utils
-from lastfm_api import Last_fm_api
+# from lastfm_api import Last_fm_api
 
-main_dict = dict()
-list_dir = os.listdir('../data/pickles/')
-
-for dump in list_dir:
-    with open(f'../data/pickles/{dump}', 'rb') as f:
-        data = pickle.load(f)
-    main_dict.update(data)
+with open('../data/pickles/main_dict.pickle', 'rb') as f:
+    main_dict = pickle.load(f)
 
 tracks = utils.load('../data/fma_metadata/tracks.csv')
 small = tracks[tracks['set', 'subset'] <= 'small']
 artist_name = small['artist', 'name']
-arist_id = small['artist', 'id']
 track_title = small['track', 'title']
-track_duration = small['track', 'duration']
 track_genre = small['track', 'genre_top']
+track_all_genres = small['track', 'genres_all']
+fma_tags = small['track', 'tags']
 
-my_zip = zip(artist_name.values, track_title.values, small.index.values)
+my_zip = zip(
+    small.index.values,
+    artist_name.values,
+    track_title.values,
+    track_genre.values,
+    track_all_genres.values,
+    fma_tags.values,
+)
 zip_list = list(my_zip)
 
-errors = list()
-for dump in list_dir:
-    with open(f'../data/pickles/{dump}', 'rb') as f:
-        data = pickle.load(f)
-        errors += data['errors']
+for idx, artist, track, genre, all_genres, tags in zip_list:
+    if idx in main_dict:
+        main_dict[idx]['genre'] = genre
+        main_dict[idx]['all_genres'] = all_genres
+        main_dict[idx]['fma_tags'] = tags
+    else:
+        main_dict[idx] = {
+            'artist_name': artist,
+            'track_title': track,
+            'artist_tags': [],
+            'track_tags': [],
+            'similar_tracks': [],
+            'similar_list': [],
+            'genre': genre,
+            'all_genres': all_genres,
+            'fma_tags': tags
+        }
 
-errors_zip = filter(lambda x: x[2] in errors, zip_list)
-errors_list = list(errors_zip)
-
-last_fm = Last_fm_api()
-errors_dict = last_fm.get_response_lastfm(errors_list)
-
-with open('../data/pickles/errors_dict.pickle', 'wb') as f:
-    pickle.dump(errors_dict, f)
+with open('../data/pickles/new_main_dict.pickle','wb') as f:
+    pickle.dump(main_dict, f)
 
